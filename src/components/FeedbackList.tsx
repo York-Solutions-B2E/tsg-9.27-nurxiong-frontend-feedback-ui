@@ -1,0 +1,75 @@
+import { useState } from "react";
+import { Card, Table, Form, InputGroup } from "react-bootstrap";
+
+const mockFeedback = [
+    { id: 1, memberId: "101", providerName: "Dr. Smith", rating: 5, comment: "Excellent care " +
+            "gdklfjgkl " +
+            "dlsfjgkldf j" +
+            "dflkgjdfk l" +
+            "jdslkfgjd " +
+            "fdhdfghdfhf " +
+            "dfgdfg sdfg s" },
+    { id: 2, memberId: "102", providerName: "Dr. Lee", rating: 4, comment: "Very helpful" },
+    { id: 3, memberId: "101", providerName: "Dr. Adams", rating: 3, comment: "Average experience" },
+    { id: 4, memberId: "103", providerName: "Dr. Brown", rating: 5, comment: "Highly recommend" },
+];
+
+function FeedbackList() {
+    const [filterId, setFilterId] = useState("");
+
+    const filtered = mockFeedback.filter(f =>
+        filterId.trim() === "" || f.memberId.includes(filterId.trim())
+    );
+
+    return (
+        <Card className="shadow-sm mt-4" style={{ maxWidth: "900px", margin: "auto" }}>
+            <Card.Body>
+                <Card.Title className="text-center mb-3">My Feedback List</Card.Title>
+
+                <InputGroup className="mb-3">
+                    <InputGroup.Text>Filter by Member ID</InputGroup.Text>
+                    <Form.Control
+                        type="text"
+                        placeholder="Enter member ID"
+                        value={filterId}
+                        maxLength={200}
+                        onChange={(e) => setFilterId(e.target.value)}
+                    />
+                </InputGroup>
+
+                <Table bordered hover responsive className="align-middle text-center">
+                    <thead className="table-light">
+                    <tr>
+                        <th>ID</th>
+                        <th>Member ID</th>
+                        <th>Provider Name</th>
+                        <th>Rating</th>
+                        <th>Comment</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    {filtered.length > 0 ? (
+                        filtered.map((item) => (
+                            <tr key={item.id}>
+                                <td>{item.id}</td>
+                                <td>{item.memberId}</td>
+                                <td>{item.providerName}</td>
+                                <td>{"★".repeat(item.rating)}</td>
+                                <td style={{whiteSpace:"normal"}}>{item.comment}</td>
+                            </tr>
+                        ))
+                    ) : (
+                        <tr>
+                            <td colSpan={5} className="text-muted">
+                                No feedback found for this Member ID
+                            </td>
+                        </tr>
+                    )}
+                    </tbody>
+                </Table>
+            </Card.Body>
+        </Card>
+    );
+}
+
+export default FeedbackList;
