@@ -1,28 +1,30 @@
-import { useState } from "react";
-import { Card, Table, Form, InputGroup } from "react-bootstrap";
+import {useState} from "react";
+import {Card, Table, Form, InputGroup} from "react-bootstrap";
 
 const mockFeedback = [
-    { id: 1, memberId: "101", providerName: "Dr. Smith", rating: 5, comment: "Excellent care " +
+    {
+        id: 1, memberId: "101", providerName: "Dr. Smith", rating: 5, comment: "Excellent care " +
             "gdklfjgkl " +
             "dlsfjgkldf j" +
             "dflkgjdfk l" +
             "jdslkfgjd " +
             "fdhdfghdfhf " +
-            "dfgdfg sdfg s" },
-    { id: 2, memberId: "102", providerName: "Dr. Lee", rating: 4, comment: "Very helpful" },
-    { id: 3, memberId: "101", providerName: "Dr. Adams", rating: 3, comment: "Average experience" },
-    { id: 4, memberId: "103", providerName: "Dr. Brown", rating: 5, comment: "Highly recommend" },
+            "dfgdfg sdfg s"
+    },
+    {id: 2, memberId: "102", providerName: "Dr. Lee", rating: 4, comment: ""},
+    {id: 8, memberId: "101", providerName: "Dr. Adams", rating: 3, comment: "Average experience"},
+    {id: 4, memberId: "103", providerName: "Dr. Brown", rating: 5, comment: "Highly recommend"},
 ];
 
 function FeedbackList() {
     const [filterId, setFilterId] = useState("");
 
     const filtered = mockFeedback.filter(f =>
-        filterId.trim() === "" || f.memberId.includes(filterId.trim())
+        filterId.trim() === "" || f.memberId.toString().includes(filterId.trim())
     );
 
     return (
-        <Card className="shadow-sm mt-4" style={{ maxWidth: "900px", margin: "auto" }}>
+        <Card className="shadow-sm mt-4" style={{maxWidth: "900px", margin: "auto"}}>
             <Card.Body>
                 <Card.Title className="text-center mb-3">My Feedback List</Card.Title>
 
@@ -49,13 +51,13 @@ function FeedbackList() {
                     </thead>
                     <tbody>
                     {filtered.length > 0 ? (
-                        filtered.map((item) => (
-                            <tr key={item.id}>
-                                <td>{item.id}</td>
+                        filtered.map((item, index) => (
+                            <tr key={index + 1}>
+                                <td>{index + 1}</td>
                                 <td>{item.memberId}</td>
                                 <td>{item.providerName}</td>
                                 <td>{"★".repeat(item.rating)}</td>
-                                <td style={{whiteSpace:"normal"}}>{item.comment}</td>
+                                <td>{item.comment}</td>
                             </tr>
                         ))
                     ) : (

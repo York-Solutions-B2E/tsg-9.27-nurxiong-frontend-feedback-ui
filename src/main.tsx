@@ -7,9 +7,8 @@ import App from './App.tsx'
 
 createRoot(document.getElementById('root')!).render(
     <StrictMode>
-        <Container style={{"all": "unset"}}>
+        <Container>
             <App/>
         </Container>
-        {/*<Feedback/>*/}
     </StrictMode>,
 )

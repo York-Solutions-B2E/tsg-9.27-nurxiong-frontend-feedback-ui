@@ -1,4 +1,3 @@
-// --- StarRating Component ---
 // @ts-ignore
 export function StarRating({value, onChange, size = 24}) {
 
