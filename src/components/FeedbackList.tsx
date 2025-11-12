@@ -3,21 +3,6 @@ import {Card, Table, Form, InputGroup} from "react-bootstrap";
 import type {FeedbackDTO} from "../interfaces/FeedbackDTO.ts";
 import {getFeedback} from "../api/FeedbackAPI.ts";
 
-const mockFeedback: FeedbackDTO[] = [
-    {
-        memberId: "101", providerName: "Dr. Smith", rating: 5, comment: "Excellent care " +
-            "gdklfjgkl " +
-            "dlsfjgkldf j" +
-            "dflkgjdfk l" +
-            "jdslkfgjd " +
-            "fdhdfghdfhf " +
-            "dfgdfg sdfg s"
-    },
-    {memberId: "102", providerName: "Dr. Lee", rating: 4, comment: ""},
-    {memberId: "101", providerName: "Dr. Adams", rating: 3, comment: "Average experience"},
-    {memberId: "103", providerName: "Dr. Brown", rating: 5, comment: "Highly recommend"},
-];
-
 // @ts-ignore
 function FeedbackList({updateFeedback}) {
     const [filterId, setFilterId] = useState("");
@@ -33,7 +18,7 @@ function FeedbackList({updateFeedback}) {
     }
 
     useEffect(() => {
-        if (feedbacks)
+        if (!feedbacks)
             data()
         if (updateFeedback) {
             setFeedbacks(prev => [...prev, updateFeedback]);

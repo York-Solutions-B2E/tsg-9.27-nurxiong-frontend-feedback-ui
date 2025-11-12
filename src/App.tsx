@@ -5,7 +5,7 @@ import {postFeedback} from "./api/FeedbackAPI.ts";
 import {useState} from "react";
 import type {FeedbackDTO} from "./interfaces/FeedbackDTO.ts";
 
-function App() {
+function App({_FeedbackCard = FeedbackCard}) {
     const [feedback, setFeedback] = useState<FeedbackDTO>();
 
     // const fakeData : FeedbackDTO = {memberId: "120", providerName: "Dr. xiong", rating: 5, comment: "Highly recommend"}
@@ -17,7 +17,7 @@ function App() {
 
     return (
         <>
-            <FeedbackCard onSubmit={handlePostFeedback}/>
+            <_FeedbackCard onSubmit={handlePostFeedback}/>
             <FeedbackList updateFeedback={feedback}/>
         </>
     )
