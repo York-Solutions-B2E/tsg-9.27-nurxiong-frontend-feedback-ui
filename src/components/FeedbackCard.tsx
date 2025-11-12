@@ -37,11 +37,11 @@ export default function FeedbackCard({defaultMemberId = '', defaultProviderName 
 
         try {
             setSubmitting(true);
-            // allow parent to handle submit (send to API). Expect a promise if async.
-            const result = onSubmit ? onSubmit(payload) : null;
-            if (result && typeof result.then === 'function') {
-                await result;
-            }
+            const result = await onSubmit(payload);
+            // const result: FeedbackDTO = await postFeedback(payload)
+            // console.log(payload)
+            console.log(result)
+
             setSuccessMsg('Feedback submitted. Thank you!');
             // reset lightly but keep member/provider for convenience
             setRating(0);

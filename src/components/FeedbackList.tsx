@@ -1,9 +1,11 @@
-import {useState} from "react";
+import {useEffect, useState} from "react";
 import {Card, Table, Form, InputGroup} from "react-bootstrap";
+import type {FeedbackDTO} from "../interfaces/FeedbackDTO.ts";
+import {getFeedback} from "../api/FeedbackAPI.ts";
 
-const mockFeedback = [
+const mockFeedback: FeedbackDTO[] = [
     {
-        id: 1, memberId: "101", providerName: "Dr. Smith", rating: 5, comment: "Excellent care " +
+        memberId: "101", providerName: "Dr. Smith", rating: 5, comment: "Excellent care " +
             "gdklfjgkl " +
             "dlsfjgkldf j" +
             "dflkgjdfk l" +
@@ -11,17 +13,32 @@ const mockFeedback = [
             "fdhdfghdfhf " +
             "dfgdfg sdfg s"
     },
-    {id: 2, memberId: "102", providerName: "Dr. Lee", rating: 4, comment: ""},
-    {id: 8, memberId: "101", providerName: "Dr. Adams", rating: 3, comment: "Average experience"},
-    {id: 4, memberId: "103", providerName: "Dr. Brown", rating: 5, comment: "Highly recommend"},
+    {memberId: "102", providerName: "Dr. Lee", rating: 4, comment: ""},
+    {memberId: "101", providerName: "Dr. Adams", rating: 3, comment: "Average experience"},
+    {memberId: "103", providerName: "Dr. Brown", rating: 5, comment: "Highly recommend"},
 ];
 
-function FeedbackList() {
+// @ts-ignore
+function FeedbackList({updateFeedback}) {
     const [filterId, setFilterId] = useState("");
+    const [feedbacks, setFeedbacks] = useState<FeedbackDTO[]>([]);
 
-    const filtered = mockFeedback.filter(f =>
+    const filtered = feedbacks.filter(f =>
         filterId.trim() === "" || f.memberId.toString().includes(filterId.trim())
     );
+    const data = async () => {
+        const result: any = await getFeedback()
+        console.log(result)
+        setFeedbacks([...result?.FeedbackList])
+    }
+
+    useEffect(() => {
+        if (feedbacks)
+            data()
+        if (updateFeedback) {
+            setFeedbacks(prev => [...prev, updateFeedback]);
+        }
+    }, [updateFeedback])
 
     return (
         <Card className="shadow-sm mt-4" style={{maxWidth: "900px", margin: "auto"}}>
@@ -42,7 +59,7 @@ function FeedbackList() {
                 <Table bordered hover responsive className="align-middle text-center">
                     <thead className="table-light">
                     <tr>
-                        <th>ID</th>
+                        <th>Item #</th>
                         <th>Member ID</th>
                         <th>Provider Name</th>
                         <th>Rating</th>
