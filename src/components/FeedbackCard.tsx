@@ -15,10 +15,10 @@ export default function FeedbackCard({defaultMemberId = '', defaultProviderName 
     const [submitting, setSubmitting] = useState(false);
 
     function validate() {
-        if (!memberId?.trim()) return 'Member ID is required.';
-        if (!providerName?.trim()) return 'Provider name is required.';
+        if (!memberId?.trim() || memberId?.length > 36 || memberId?.length < 1) return 'Member ID is required.';
+        if (!providerName?.trim() || providerName?.length > 80 || providerName?.length < 1) return 'Provider name is required.';
         if (!rating || rating < 1 || rating > 5) return 'Rating must be between 1 and 5.';
-        if (comment.length > 200) return 'Comment must be under 200 characters.';
+        if (comment.length > 200 || comment.length < 1) return 'Comment is required and must be under 200 characters.';
         return null;
     }
 
