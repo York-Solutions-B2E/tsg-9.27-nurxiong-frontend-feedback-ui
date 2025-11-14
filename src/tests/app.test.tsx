@@ -1,13 +1,32 @@
-import { render, screen, waitFor } from "@testing-library/react";
+import {render, screen} from "@testing-library/react";
 import App from "../App";
-import { postFeedback } from "../api/FeedbackAPI";
-
 // Use Vitest’s mocking functions instead of Jest’s
-import { vi, describe, it, beforeEach, expect } from "vitest";
+import {vi, describe, it, beforeEach, expect} from "vitest";
+import userEvent from '@testing-library/user-event';
+import {postFeedback} from "../api/FeedbackAPI.ts";
 
 // Mock the API call
-vi.mock("../api/FeedbackAPI", () => ({
-    postFeedback: vi.fn(),
+vi.mock("../api/FeedbackAPI");
+
+vi.mock("../components/FeedbackList", () => ({
+    default: () => <>Mock FeedbackList</>,
+}));
+
+
+vi.mock('../components/FeedbackCard', () => ({
+    default: ({onSubmit}: any) => {
+
+        return (
+            <button onClick={() => onSubmit({
+                memberId: "120",
+                providerName: "Dr. Xiong",
+                rating: 5,
+                comment: "Highly recommend",
+            })}>
+                Submit
+            </button>
+        );
+    }
 }));
 
 describe("App component", () => {
@@ -22,32 +41,27 @@ describe("App component", () => {
         vi.clearAllMocks();
     });
 
-    it("calls postFeedback when submitting feedback", async () => {
-        (postFeedback as unknown as ReturnType<typeof vi.fn>).mockResolvedValueOnce(mockFeedback);
+    it("should display FeedbackCard && FeedbackList component", () => {
+        // Arrange
 
-        const mock = ()=><>mock test data</>
-        render(<App _FeedbackCard={mock}/>);
+        render(<App/>);
 
-        // Locate your FeedbackCard or trigger submit manually
-        const feedbackCard = screen.getByTestId("feedback-card");
-        const onSubmit = (feedbackCard as any).props?.onSubmit;
 
-        await onSubmit(mockFeedback);
-
-        expect(postFeedback).toHaveBeenCalledWith(mockFeedback);
+        expect(screen.getByText(/Submit/)).toBeInTheDocument()
+        expect(screen.getByText(/Mock FeedbackList/)).toBeInTheDocument()
     });
 
-    it("updates FeedbackList when feedback is returned", async () => {
-        (postFeedback as unknown as ReturnType<typeof vi.fn>).mockResolvedValueOnce(mockFeedback);
+    it("should call postFeedback API and return data", async () => {
+        // Arrange
+        const user = userEvent.setup();
+        vi.mocked(postFeedback).mockResolvedValueOnce(mockFeedback);
+        render(<App/>);
 
-        render(<App />);
+        // Act
+        await user.click(screen.getByText('Submit'));
 
-        const feedbackCard = screen.getByTestId("feedback-card");
-        const onSubmit = (feedbackCard as any).props?.onSubmit;
-        await onSubmit(mockFeedback);
-
-        await waitFor(() => {
-            expect(screen.getByText("Dr. Xiong")).toBeInTheDocument();
-        });
+        // Assert
+        expect(postFeedback).toHaveBeenCalledWith(mockFeedback);
+        expect(postFeedback).toHaveBeenCalledTimes(1);
     });
 });
