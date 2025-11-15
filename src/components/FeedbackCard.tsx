@@ -1,24 +1,23 @@
 // FeedbackCard.js
-import {useState, type SetStateAction} from 'react';
+import {useState} from 'react';
 import {Card, Form, Button, InputGroup, Alert} from 'react-bootstrap';
 import {StarRating} from "./StarRating.tsx";
 
 
 // @ts-ignore
-export default function FeedbackCard({defaultMemberId = '', defaultProviderName = '', onSubmit}) {
-    const [memberId, setMemberId] = useState(defaultMemberId);
-    const [providerName, setProviderName] = useState(defaultProviderName);
+export default function FeedbackCard({onSubmit}) {
+    const [memberId, setMemberId] = useState('');
+    const [providerName, setProviderName] = useState('');
     const [rating, setRating] = useState(0);
     const [comment, setComment] = useState('');
     const [error, setError] = useState('');
     const [successMsg, setSuccessMsg] = useState('');
-    const [submitting, setSubmitting] = useState(false);
 
     function validate() {
         if (!memberId?.trim() || memberId?.length > 36 || memberId?.length < 1) return 'Member ID is required.';
         if (!providerName?.trim() || providerName?.length > 80 || providerName?.length < 1) return 'Provider name is required.';
         if (!rating || rating < 1 || rating > 5) return 'Rating must be between 1 and 5.';
-        if (comment.length > 200 || comment.length < 1) return 'Comment is required and must be under 200 characters.';
+        if (comment.length > 200) return 'Comment must be under 200 characters.';
         return null;
     }
 
@@ -36,12 +35,8 @@ export default function FeedbackCard({defaultMemberId = '', defaultProviderName 
         const payload = {memberId: memberId.trim(), providerName: providerName.trim(), rating, comment: comment.trim()};
 
         try {
-            setSubmitting(true);
-            const result = await onSubmit(payload);
-            // const result: FeedbackDTO = await postFeedback(payload)
-            // console.log(payload)
-            console.log(result)
-
+            // using fn passed in from prop
+            await onSubmit(payload);
             setSuccessMsg('Feedback submitted. Thank you!');
             // reset lightly but keep member/provider for convenience
             setRating(0);
@@ -50,8 +45,6 @@ export default function FeedbackCard({defaultMemberId = '', defaultProviderName 
             console.error(err);
             // @ts-ignore
             setError(err?.message || 'Failed to submit feedback.');
-        } finally {
-            setSubmitting(false);
         }
     }
 
@@ -64,6 +57,7 @@ export default function FeedbackCard({defaultMemberId = '', defaultProviderName 
                 {error && <Alert variant="danger">{error}</Alert>}
                 {successMsg && <Alert variant="success">{successMsg}</Alert>}
 
+                {/*Do not run built-in HTML validation. I will handle validation myself.*/}
                 <Form onSubmit={handleSubmit} noValidate>
                     <Form.Group className="mb-3" controlId="memberId">
                         <Form.Label>Member ID</Form.Label>
@@ -90,7 +84,7 @@ export default function FeedbackCard({defaultMemberId = '', defaultProviderName 
                     <Form.Group className="mb-3" controlId="rating">
                         <Form.Label>Rating</Form.Label>
                         <div className="mb-2">
-                            <StarRating value={rating} onChange={(val: SetStateAction<number>) => setRating(val)}/>
+                            <StarRating value={rating} onChange={(val:any) => setRating(val)}/>
                         </div>
                         <Form.Text muted>{rating ? `You rated ${rating} / 5` : 'Click a star to rate (1–5)'}</Form.Text>
                     </Form.Group>
@@ -117,8 +111,8 @@ export default function FeedbackCard({defaultMemberId = '', defaultProviderName 
                         }}>
                             Reset
                         </Button>
-                        <Button variant="primary" type="submit" disabled={submitting}>
-                            {submitting ? 'Submitting…' : 'Submit Feedback'}
+                        <Button variant="primary" type="submit">
+                            Submit Feedback
                         </Button>
                     </InputGroup>
                 </Form>

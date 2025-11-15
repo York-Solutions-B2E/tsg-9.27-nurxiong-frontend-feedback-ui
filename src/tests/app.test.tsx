@@ -43,10 +43,12 @@ describe("App component", () => {
 
     it("should display FeedbackCard && FeedbackList component", () => {
         // Arrange
+        // already mocked via vi.mock above
 
+        // Act
         render(<App/>);
 
-
+        // Assert
         expect(screen.getByText(/Submit/)).toBeInTheDocument()
         expect(screen.getByText(/Mock FeedbackList/)).toBeInTheDocument()
     });
@@ -55,9 +57,9 @@ describe("App component", () => {
         // Arrange
         const user = userEvent.setup();
         vi.mocked(postFeedback).mockResolvedValueOnce(mockFeedback);
-        render(<App/>);
 
         // Act
+        render(<App/>);
         await user.click(screen.getByText('Submit'));
 
         // Assert
