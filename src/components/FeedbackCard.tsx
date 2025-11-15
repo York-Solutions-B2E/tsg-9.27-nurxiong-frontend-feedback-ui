@@ -97,7 +97,7 @@ export default function FeedbackCard({onSubmit}) {
                             placeholder="Write any additional details..."
                             value={comment}
                             onChange={(e) => setComment(e.target.value)}
-                            maxLength={200}
+                            // maxLength={200}
                         />
                         <Form.Text muted>{comment.length}/200</Form.Text>
                     </Form.Group>
