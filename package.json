@@ -19,6 +19,10 @@
     "react-bootstrap": "^2.10.10",
     "react-dom": "^19.2.0"
   },
+
+  "optionalDependencies": {
+    "@rollup/rollup-linux-x64-gnu": "4.6.1"
+  },
   "devDependencies": {
     "@eslint/js": "^9.39.1",
     "@testing-library/jest-dom": "^6.9.1",
