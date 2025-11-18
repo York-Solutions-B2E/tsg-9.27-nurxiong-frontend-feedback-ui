@@ -1,8 +1,7 @@
-import type {FeedbackDTO} from "../interfaces/FeedbackDTO.ts";
 
 const baseURL = "http://localhost:8080/api/v1"
 
-export async function postFeedback(feedback: FeedbackDTO, _fetch = fetch): Promise<FeedbackDTO> {
+export async function postFeedback(feedback :any, _fetch = fetch){
     const data = await _fetch(baseURL + "/feedback", {
         method: "POST",
         headers: {
@@ -13,7 +12,7 @@ export async function postFeedback(feedback: FeedbackDTO, _fetch = fetch): Promi
     return await data.json()
 }
 
-export async function getFeedback(_fetch = fetch): Promise<FeedbackDTO> {
-    const data = await _fetch(baseURL + "/feedbacks"+ "?memberId=123k")
+export async function getFeedback(id: any, _fetch = fetch) {
+    const data = await _fetch(baseURL + "/feedback?memberId=" + id)
     return await data.json()
 }

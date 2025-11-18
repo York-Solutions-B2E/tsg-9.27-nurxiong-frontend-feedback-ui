@@ -1,29 +1,24 @@
-import {useEffect, useState} from "react";
-import {Card, Table, Form, InputGroup} from "react-bootstrap";
+import {useState} from "react";
+import {Card, Table, Form, InputGroup, Button} from "react-bootstrap";
 import type {FeedbackDTO} from "../interfaces/FeedbackDTO.ts";
 import {getFeedback} from "../api/FeedbackAPI.ts";
 
 // @ts-ignore
-function FeedbackList({updateFeedback}) {
+function FeedbackList() {
     const [filterId, setFilterId] = useState("");
     const [feedbacks, setFeedbacks] = useState<FeedbackDTO[]>([]);
 
-    const filtered = feedbacks.filter(f =>
-        filterId.trim() === "" || f.memberId.toString().includes(filterId.trim())
-    );
-    const data = async () => {
-        const result: any = await getFeedback()
-        console.log(result)
-        setFeedbacks([...result?.FeedbackList])
-    }
-
-    useEffect(() => {
-        if (!feedbacks)
-            data()
-        if (updateFeedback) {
-            setFeedbacks(prev => [...prev, updateFeedback]);
+    // const filtered = feedbacks.filter(f =>
+    //     filterId.trim() === "" || f.memberId.toString().includes(filterId.trim())
+    // );
+    const data = async (id: any) => {
+        try {
+            const result: any = await getFeedback(id)
+            setFeedbacks([...result?.FeedbackList])
+        }catch(err) {
+            console.log(err)
         }
-    }, [updateFeedback])
+    }
 
     return (
         <Card className="shadow-sm mt-4" style={{maxWidth: "900px", margin: "auto"}}>
@@ -36,9 +31,10 @@ function FeedbackList({updateFeedback}) {
                         type="text"
                         placeholder="Enter member ID"
                         value={filterId}
-                        maxLength={200}
+                        maxLength={36}
                         onChange={(e) => setFilterId(e.target.value)}
                     />
+                    <Button onClick={() => data(filterId)}>Filter</Button>
                 </InputGroup>
 
                 <Table bordered hover responsive className="align-middle text-center">
@@ -52,8 +48,8 @@ function FeedbackList({updateFeedback}) {
                     </tr>
                     </thead>
                     <tbody>
-                    {filtered.length > 0 ? (
-                        filtered.map((item, index) => (
+                    {feedbacks.length > 0 ? (
+                        feedbacks.map((item, index) => (
                             <tr key={index + 1}>
                                 <td>{index + 1}</td>
                                 <td>{item.memberId}</td>
