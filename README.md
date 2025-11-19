@@ -48,7 +48,9 @@ To run tests, run the following command within **tsg-9.27-nurxiong-frontend-feed
 ```
 
 ```bash
-  npm test:ui
+  npm run test
+  or
+  npm run test:ui
   or
   npx vitest --ui
 ```
