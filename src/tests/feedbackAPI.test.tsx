@@ -19,6 +19,7 @@ describe("feedback API", () => {
         };
         // mock fetch return
         mockFetch.mockResolvedValue({
+            ok: true,
             json: vi.fn().mockResolvedValue(mockResponse)
         });
 
@@ -47,6 +48,7 @@ describe("feedback API", () => {
         };
 
         mockFetch.mockResolvedValue({
+            ok: true,
             json: vi.fn().mockResolvedValue(mockResponse)
         });
 
